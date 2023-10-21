@@ -8,57 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var cats = ["Tony", "Calvin", "Minnie"]
     var body: some View {
-//        List {
-//            ForEach(0..<5) {
-//                Section("Section \($0)") {
-//                    ForEach(0..<5) {
-//                        Text("Hello \($0)")
-//                    }
-//                }
-//            }
-//        }
-//        .listStyle(.insetGrouped)
-        
-//        List(0..<5) {
-//            Text("Hello, \($0)")
-//        }
-        
-        List(cats, id: \.self) {
-            Text($0)
-        }
-        
-        HStack {
-            
-            Spacer()
-            
-            Button("Add more") {
-                cats.append(cats.randomElement() ?? "Unknown")
-            }
-            .buttonStyle(.bordered)
-            
-            Spacer()
-            
-            Button("Remove") {
-                cats.removeLast()
-            }
-            .buttonStyle(.borderedProminent)
-            
-            Spacer()
-            
+        VStack {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, world!")
         }
         .padding()
-        .border(.background)
-        
     }
     
-//    func testBundles() {
-//        if let fileURL = Bundle.main.url(forResource: "somefile", withExtension: "txt")
-//            if let fileContents = try? String(contentsOf: fileURL) {
-////            Loaded the file into a string
-//        }
-//    }
+    func testStrings() {
+        let word = "Swift"
+        let checker = UITextChecker()
+        
+        let range = NSRange(location: 0, length: word.utf16.count)
+        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
+        
+        let allGood = misspelledRange.location == NSNotFound
+    }
     
 }
 
