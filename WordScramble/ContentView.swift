@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var score = 0
 
     var body: some View {
         VStack {
@@ -40,6 +41,18 @@ struct ContentView: View {
                     .alert(errorTitle, isPresented: $showingError) { } message: {
                         Text(errorMessage)
                     }
+                    .toolbar(content: {
+                        Button("New Word") {
+                            startGame()
+                        }
+                    })
+                
+                HStack {
+                    Text("Actual word: \(rootWord)")
+                    Spacer()
+                    Text("Player Score: \(score)")
+                }
+                .padding()
             }
         }
     }
@@ -47,25 +60,34 @@ struct ContentView: View {
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard answer.count > 0 else { return }
-        
+        guard answer.count >= 3 else {
+            wordError(title: "Too short", message: "Word should have at least 3 letters")
+            return
+        }
+
+        guard answer != rootWord else {
+            wordError(title: "For real?", message: "You know that you can't do that, right?")
+            return
+        }
+
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original!")
             return
         }
-        
+
         guard isPossible(word: answer) else {
             wordError(title: "Word not possible", message: "You can't spell that word from '\(rootWord)'")
             return
         }
-        
+
         guard isReal(word: answer) else {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
             return
         }
-        
+
         withAnimation {
             usedWords.insert(answer, at: 0)
+            score += newWord.count
             newWord = ""
         }
     }
@@ -75,6 +97,7 @@ struct ContentView: View {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
+                score = 0
                 return
             }
         }
